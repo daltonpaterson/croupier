@@ -18,4 +18,4 @@ middle.divider()
 if roulette:
     st.switch_page("pages/roulette_menu.py")
 if blackjack:
-    st.switch_page("pages/blackjack.py")
+    st.switch_page("pages/blackjack_menu.py")
