@@ -102,6 +102,7 @@ else:
     show_answer.button("Show Answer", use_container_width=True, disabled=st.session_state.show_answer, on_click=reveal_question)
     
     if return_to_menu.button("Return to Menu", use_container_width= True):
+        st.session_state.clear()
         st.switch_page("main.py")
 
     
