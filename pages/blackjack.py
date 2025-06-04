@@ -65,7 +65,7 @@ else:
     st.subheader(f"Blackjack on {st.session_state.question_number}")
 
     with st.form("answer_form"):
-        user_input = st.number_input("What is the correct answer?", key=st.session_state.input_key, value=None)
+        user_input = st.text_input("What is the correct answer?", key=st.session_state.input_key)
         submitted = st.form_submit_button("Submit")
 
         if submitted:
@@ -110,7 +110,7 @@ else:
     st.components.v1.html(f"""
         <script>
             setTimeout(function() {{
-                const formInputs = window.parent.document.querySelectorAll('input[type="number"]');
+                const formInputs = window.parent.document.querySelectorAll('input[type="text"]');
                 if (formInputs.length > 0) {{
                     formInputs[formInputs.length - 1].focus();
                 }}
