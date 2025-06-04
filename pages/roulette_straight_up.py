@@ -3,10 +3,9 @@ import random
 import uuid
 
 DIFFICULTY_RANGES = {
-    "Easy": list(range(5, 105, 5)),     # 5 to 100
-    "Medium": list(range(50, 205, 5)),   # 50 to 200
-    "Hard": list(range(5, 505, 5)),   # 5 to 500
-    "Kyle": list(range(1, 21, 1)),    # 1 to 20
+    "Easy": list(range(20, 55, 5)),     # 5 to 50
+    "Medium": list(range(20, 105, 5)),   # 5 to 100
+    "Hard": list(range(20, 205, 5)),   # 5 to 200
 }
 
 # -------------------
@@ -20,25 +19,29 @@ if not st.session_state.difficulty_chosen:
     st.title("Select Difficulty")
     difficulty = st.selectbox(
         "Choose your difficulty:",
-        options=["Easy", "Medium", "Hard", "Kyle"],
+        options=["Easy", "Medium", "Hard"],
         accept_new_options=False
     )
 
     left, middle, right = st.columns(3, vertical_alignment="center")
-    blackjack = middle.button("Continue", use_container_width=True)
-    blackjack_menu = middle.button("Return to Blackjack Menu", use_container_width=True)
+    straight_up = middle.button("Continue", use_container_width=True)
+    return_to_menu = middle.button("Return to Roulette Menu", use_container_width=True)
 
-    if blackjack:
+    if straight_up:
         st.session_state.difficulty = difficulty
         st.session_state.difficulty_chosen = True
+        st.session_state.conversion_multiplier = 35
         st.rerun()
-    if blackjack_menu:
-        st.session_state.clear()
-        st.switch_page("pages/blackjack_menu.py")
 
+    if return_to_menu:
+        st.session_state.clear()
+        st.switch_page("pages/roulette_menu.py")
 else:
+
+
+
     # --------------------
-    # Blackjack logic
+    # Conversion Logic
     # --------------------
 
 
@@ -46,7 +49,7 @@ else:
         current = st.session_state.question_number
         available = [q for q in question_pool if q != current]
         st.session_state.question_number = random.choice(available)
-        st.session_state.correct_answer = st.session_state.question_number * 1.5
+        st.session_state.correct_answer = st.session_state.question_number * st.session_state.conversion_multiplier
         st.session_state.correct = False
         st.session_state.show_result = False
         st.session_state.show_answer = False
@@ -63,15 +66,15 @@ else:
     # Initialize session state for game
     if "question_number" not in st.session_state:
         st.session_state.question_number = random.choice(question_pool)
-        st.session_state.correct_answer = st.session_state.question_number * 1.5
+        st.session_state.correct_answer = st.session_state.question_number * st.session_state.conversion_multiplier
         st.session_state.show_result = False
         st.session_state.correct = False
         st.session_state.show_answer = False
         st.session_state.input_key = str(uuid.uuid4())
 
 
-    st.title("🃏 Blackjack")
-    st.subheader(f"Blackjack on {st.session_state.question_number}")
+    st.title("Paying Straight Ups")
+    st.subheader(f"{st.session_state.question_number} on the number")
 
     with st.form("answer_form"):
         user_input = st.text_input("What is the correct answer?", key=st.session_state.input_key)
@@ -80,7 +83,7 @@ else:
         if submitted:
             try:
                 user_value = float(user_input)
-                correct_value = st.session_state.question_number * 1.5
+                correct_value = st.session_state.question_number * st.session_state.conversion_multiplier
                 is_correct = abs(user_value - correct_value) < 0.01
 
                 if st.session_state.correct and is_correct:
