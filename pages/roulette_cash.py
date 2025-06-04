@@ -27,6 +27,7 @@ if not st.session_state.difficulty_chosen:
     launch_2 = middle.button("£2", use_container_width=True)
     launch_5 = middle.button("£5", use_container_width=True)
     launch_25 = middle.button("£25", use_container_width=True)
+    return_to_menu = middle.button("Return to Roulette Menu", use_container_width=True)
 
     if launch_2:
         st.session_state.difficulty = difficulty
@@ -45,6 +46,10 @@ if not st.session_state.difficulty_chosen:
         st.session_state.difficulty_chosen = True
         st.session_state.conversion_multiplier = 25
         st.rerun()
+
+    if return_to_menu:
+        st.session_state.clear()
+        st.switch_page("pages/roulette_menu.py")
 else:
 
 
@@ -87,7 +92,7 @@ else:
 
     with st.form("answer_form"):
         user_input = st.text_input("What is the correct answer?", key=st.session_state.input_key)
-        submitted = st.form_submit_button("Check")
+        submitted = st.form_submit_button("Check", type = "primary")
 
         if submitted:
             try:

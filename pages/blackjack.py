@@ -18,14 +18,24 @@ if "difficulty_chosen" not in st.session_state:
 
 if not st.session_state.difficulty_chosen:
     st.title("Select Difficulty")
-    difficulty = st.radio(
+    difficulty = st.selectbox(
         "Choose your difficulty:",
         options=["Easy", "Medium", "Hard", "Kyle"],
+        accept_new_options=False
     )
-    if st.button("Start Game"):
+
+    left, middle, right = st.columns(3, vertical_alignment="center")
+    blackjack = middle.button("Continue", use_container_width=True)
+    blackjack_menu = middle.button("Return to Blackjack Menu", use_container_width=True)
+
+    if blackjack:
         st.session_state.difficulty = difficulty
         st.session_state.difficulty_chosen = True
         st.rerun()
+    if blackjack_menu:
+        st.session_state.clear()
+        st.switch_page("pages/blackjack_menu.py")
+
 else:
     # --------------------
     # Blackjack game logic
@@ -61,12 +71,11 @@ else:
 
 
     st.title("🃏 Blackjack")
-    st.write(f"Difficulty: **{st.session_state.difficulty}**")
     st.subheader(f"Blackjack on {st.session_state.question_number}")
 
     with st.form("answer_form"):
         user_input = st.text_input("What is the correct answer?", key=st.session_state.input_key)
-        submitted = st.form_submit_button("Check")
+        submitted = st.form_submit_button("Check", type = "primary")
 
         if submitted:
             try:
