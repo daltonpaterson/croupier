@@ -16,9 +16,9 @@ if "difficulty_chosen" not in st.session_state:
     st.session_state.difficulty = None
 
 if not st.session_state.difficulty_chosen:
-    st.title("Select Difficulty")
+    st.title("Paying Straight Ups")
     difficulty = st.selectbox(
-        "Choose your difficulty:",
+        "Select Difficulty",
         options=["Easy", "Medium", "Hard"],
         accept_new_options=False
     )
