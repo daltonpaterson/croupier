@@ -115,7 +115,7 @@ else:
     
     if return_to_menu.button("Return to Menu", use_container_width= True):
         st.session_state.clear()
-        st.switch_page("main.py")
+        st.switch_page("pages/roulette_straight_up.py")
 
     
 
