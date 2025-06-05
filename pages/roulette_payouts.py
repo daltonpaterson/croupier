@@ -11,6 +11,7 @@ DIFFICULTY_RANGES = {
 # -------------------
 # Difficulty selection
 # -------------------
+
 if "difficulty_chosen" not in st.session_state:
     st.session_state.difficulty_chosen = False
     st.session_state.difficulty = None
@@ -72,8 +73,6 @@ else:
     # Payout Logic
     # --------------------
 
-
-
     # Question Pool - Default range set to Easy
     question_pool = DIFFICULTY_RANGES.get(st.session_state.difficulty, DIFFICULTY_RANGES["Easy"])
     
@@ -99,18 +98,12 @@ else:
         st.session_state.show_result = False
         st.session_state.show_answer = False
         st.session_state.input_key = str(uuid.uuid4())
-
         st.session_state.reset_inputs = True
-
         st.rerun()
     
     def reveal_question():
         st.session_state.show_answer = True
         st.session_state.show_result = True
-
-    def verify_question(one,five,twentyfive,onehundred):
-
-        return True
 
     # Initialize session state for game
     if "question_number" not in st.session_state:
@@ -152,7 +145,6 @@ else:
             pink_chip = st.image("assets/images/PinkChip.png")
             one_hundred_entry = st.text_input("100 entry", label_visibility="collapsed", key="100")
 
-        #user_input = st.text_input("What is the correct answer?", key=st.session_state.input_key)
         submitted = st.form_submit_button("Check", type = "primary")
 
         if submitted:
@@ -189,17 +181,15 @@ else:
                 elif cash_chip_total != st.session_state.required_cash_change:
                     st.error(f"Incorrect. Cash should be exactly: £{st.session_state.required_cash_change}")
                 else:
-                    st.success(f"Correct! Total: £{total_input}")
+                    st.success(f"Correct! Total: £{total_input} - Press enter to recieve a new question")
                     st.session_state.correct = True
             else:
                 if total_input == st.session_state.correct_answer:
-                    st.success(f"Correct! Total: £{total_input}")
+                    st.success(f"Correct! Total: £{total_input} - Press enter to recieve a new question")
                     st.session_state.correct = True
                 else:
                     st.error(f"Incorrect. Total entered: £{total_input}")
 
-
-    
     if st.session_state.show_result:
         if st.session_state.show_answer:
             st.info(f"💡 The correct answer is £{st.session_state.correct_answer}")

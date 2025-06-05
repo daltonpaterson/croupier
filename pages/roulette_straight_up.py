@@ -11,6 +11,7 @@ DIFFICULTY_RANGES = {
 # -------------------
 # Difficulty selection
 # -------------------
+
 if "difficulty_chosen" not in st.session_state:
     st.session_state.difficulty_chosen = False
     st.session_state.difficulty = None
@@ -37,13 +38,9 @@ if not st.session_state.difficulty_chosen:
         st.session_state.clear()
         st.switch_page("pages/roulette_menu.py")
 else:
-
-
-
     # --------------------
     # Conversion Logic
     # --------------------
-
 
     def reset_question():
         current = st.session_state.question_number
@@ -72,7 +69,6 @@ else:
         st.session_state.show_answer = False
         st.session_state.input_key = str(uuid.uuid4())
 
-
     st.title("Paying Straight Ups")
     st.subheader(f"{st.session_state.question_number} on the number")
 
@@ -95,16 +91,13 @@ else:
             except ValueError:
                 st.error("Please enter a valid number.")
 
-
-    
     if st.session_state.show_result:
         if st.session_state.correct:
-            st.success("✅ Correct!")
+            st.success("✅ Correct! - Press enter to recieve a new question")
         elif st.session_state.show_answer:
             st.info(f"💡 The correct answer is {st.session_state.correct_answer}")
         else:
             st.error(f"❌ Incorrect. The correct answer was {st.session_state.correct_answer}")
-
 
     new_question, show_answer, return_to_menu = st.columns(3)
 
@@ -116,8 +109,6 @@ else:
     if return_to_menu.button("Return to Menu", use_container_width= True):
         st.session_state.clear()
         st.switch_page("pages/roulette_straight_up.py")
-
-    
 
     # Autofocus text input
     st.components.v1.html(f"""
