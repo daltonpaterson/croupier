@@ -146,7 +146,7 @@ else:
 
     with st.form("answer_form"):
         user_input_amount = st.text_input("How much does it go by?", key="user_input_amount")
-        user_input_cash = st.text_input("What is the correct answer?", key="user_input_change")
+        user_input_cash = st.text_input("How much change should be given?", key="user_input_change")
         submitted = st.form_submit_button("Check", type = "primary")
         if submitted:
             try:
