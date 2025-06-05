@@ -22,10 +22,11 @@ if not st.session_state.difficulty_chosen:
         options=["Easy", "Medium", "Hard"],
         accept_new_options=False
     )
-    change_required = st.selectbox(
+    change_needed = st.selectbox(
         "Change Required:",
         options=["Enable", "Disable"],
-        accept_new_options=False
+        accept_new_options=False,
+        index=1
     )
 
     left, middle, right = st.columns(3, vertical_alignment="center")
@@ -39,26 +40,178 @@ if not st.session_state.difficulty_chosen:
         st.session_state.difficulty = difficulty
         st.session_state.difficulty_chosen = True
         st.session_state.conversion_multiplier = 1
+        st.session_state.change_enabled = (change_needed == "Enable")
         st.rerun()
 
     if launch_2:
         st.session_state.difficulty = difficulty
         st.session_state.difficulty_chosen = True
         st.session_state.conversion_multiplier = 2
+        st.session_state.change_enabled = (change_needed == "Enable")
         st.rerun()
 
     if launch_5:
         st.session_state.difficulty = difficulty
         st.session_state.difficulty_chosen = True
         st.session_state.conversion_multiplier = 5
+        st.session_state.change_enabled = (change_needed == "Enable")
         st.rerun()
 
     if launch_25:
         st.session_state.difficulty = difficulty
         st.session_state.difficulty_chosen = True
         st.session_state.conversion_multiplier = 25
+        st.session_state.change_enabled = (change_needed == "Enable")
         st.rerun()
 
     if return_to_menu:
         st.session_state.clear()
         st.switch_page("pages/roulette_menu.py")
+else:
+    # --------------------
+    # Payout Logic
+    # --------------------
+
+
+
+    # Question Pool - Default range set to Easy
+    question_pool = DIFFICULTY_RANGES.get(st.session_state.difficulty, DIFFICULTY_RANGES["Easy"])
+    
+    def change_required():
+        if st.session_state.conversion_multiplier == 2:
+            return random.randrange(10, (st.session_state.correct_answer) + 1, 10)
+        else:
+            return random.randrange(25, (st.session_state.correct_answer) + 1, 25)
+
+    def safe_int(value):
+        try:
+            return int(value)
+        except ValueError:
+            return 0
+
+    def reset_question():
+        current = st.session_state.question_number
+        available = [q for q in question_pool if q != current]
+        st.session_state.question_number = random.choice(available)
+        st.session_state.correct_answer = st.session_state.question_number * st.session_state.conversion_multiplier
+        st.session_state.required_cash_change = change_required() if st.session_state.change_enabled else None
+        st.session_state.correct = False
+        st.session_state.show_result = False
+        st.session_state.show_answer = False
+        st.session_state.input_key = str(uuid.uuid4())
+
+        st.session_state.reset_inputs = True
+
+        st.rerun()
+    
+    def reveal_question():
+        st.session_state.show_answer = True
+        st.session_state.show_result = True
+
+    def verify_question(one,five,twentyfive,onehundred):
+
+        return True
+
+    # Initialize session state for game
+    if "question_number" not in st.session_state:
+        st.session_state.question_number = random.choice(question_pool)
+        st.session_state.correct_answer = st.session_state.question_number * st.session_state.conversion_multiplier
+        st.session_state.required_cash_change = change_required() if st.session_state.change_enabled else None
+        st.session_state.show_result = False
+        st.session_state.correct = False
+        st.session_state.show_answer = False
+        st.session_state.input_key = str(uuid.uuid4())
+
+
+    if st.session_state.get("reset_inputs"):
+        st.session_state["1"] = " "
+        st.session_state["5"] = " "
+        st.session_state["25"] = " "
+        st.session_state["100"] = " "
+        st.session_state.reset_inputs = False  # Unset the flag
+
+    st.title(f"Payout Simulator at £{st.session_state.conversion_multiplier}")
+    st.subheader(f"{st.session_state.question_number} at {st.session_state.conversion_multiplier}")
+
+    if st.session_state.change_enabled:
+        st.write(f"Give exactly £{st.session_state.required_cash_change} in cash.")
+
+    with st.form("answer_form"):
+        first_col, seond_col, third_col, fourth_col = st.columns(4, vertical_alignment="center")
+
+        with first_col:
+            grey_chip = st.image("assets/images/GreyChip.png")
+            one_entry = st.text_input("1 entry", label_visibility="collapsed", key="1")
+        with seond_col:
+            red_chip = st.image("assets/images/RedChip.png")
+            five_entry = st.text_input("5 entry", label_visibility="collapsed", key="5")
+        with third_col:
+            black_chip = st.image("assets/images/BlackChip.png")
+            twenty_five_entry = st.text_input("25 entry", label_visibility="collapsed", key="25")
+        with fourth_col:
+            pink_chip = st.image("assets/images/PinkChip.png")
+            one_hundred_entry = st.text_input("100 entry", label_visibility="collapsed", key="100")
+
+        #user_input = st.text_input("What is the correct answer?", key=st.session_state.input_key)
+        submitted = st.form_submit_button("Check", type = "primary")
+
+        if submitted:
+            if st.session_state.correct:
+                reset_question()
+            ones = safe_int(one_entry)
+            fives = safe_int(five_entry)
+            twenty_fives = safe_int(twenty_five_entry)
+            one_hundreds = safe_int(one_hundred_entry)
+
+            ones_total = ones * (2 if st.session_state.conversion_multiplier == 2 else 1)
+            cash_chip_total = 0
+            non_cash_total = ones_total
+
+            if st.session_state.conversion_multiplier == 5:
+                non_cash_total += fives * 5
+            else:
+                cash_chip_total += fives * 5
+
+            if st.session_state.conversion_multiplier == 25:
+                non_cash_total += twenty_fives * 25
+            else:
+                cash_chip_total += twenty_fives * 25
+
+            cash_chip_total += one_hundreds * 100
+            total_input = cash_chip_total + non_cash_total
+
+            st.session_state.show_result = True
+            st.session_state.correct = False
+
+            if st.session_state.change_enabled:
+                if total_input != st.session_state.correct_answer:
+                    st.error(f"Incorrect. Total entered: £{total_input}")
+                elif cash_chip_total != st.session_state.required_cash_change:
+                    st.error(f"Incorrect. Cash should be exactly: £{st.session_state.required_cash_change}")
+                else:
+                    st.success(f"Correct! Total: £{total_input}")
+                    st.session_state.correct = True
+            else:
+                if total_input == st.session_state.correct_answer:
+                    st.success(f"Correct! Total: £{total_input}")
+                    st.session_state.correct = True
+                else:
+                    st.error(f"Incorrect. Total entered: £{total_input}")
+
+
+    
+    if st.session_state.show_result:
+        if st.session_state.show_answer:
+            st.info(f"💡 The correct answer is £{st.session_state.correct_answer}")
+
+
+    new_question, show_answer, return_to_menu = st.columns(3)
+
+    if new_question.button("New Question", use_container_width=True):
+        reset_question()
+
+    show_answer.button("Show Answer", use_container_width=True, disabled=st.session_state.show_answer, on_click=reveal_question)
+    
+    if return_to_menu.button("Return to Menu", use_container_width= True):
+        st.session_state.clear()
+        st.switch_page("pages/roulette_payouts.py")
