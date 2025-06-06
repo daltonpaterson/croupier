@@ -18,13 +18,14 @@ if "difficulty_chosen" not in st.session_state:
 
 if not st.session_state.difficulty_chosen:
     st.title("Paying Straight Ups")
-    difficulty = st.selectbox(
+
+    left, middle, right = st.columns(3, vertical_alignment="center")
+    difficulty = middle.selectbox(
         "Select Difficulty",
         options=["Easy", "Medium", "Hard"],
         accept_new_options=False
     )
 
-    left, middle, right = st.columns(3, vertical_alignment="center")
     straight_up = middle.button("Continue", use_container_width=True)
     return_to_menu = middle.button("Return to Roulette Menu", use_container_width=True)
 

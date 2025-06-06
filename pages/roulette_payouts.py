@@ -18,19 +18,18 @@ if "difficulty_chosen" not in st.session_state:
 
 if not st.session_state.difficulty_chosen:
     st.title("Roulette Payouts")
-    difficulty = st.selectbox(
+    left, middle, right = st.columns(3, vertical_alignment="center")
+    difficulty = middle.selectbox(
         "Select Difficulty:",
         options=["Easy", "Medium", "Hard"],
         accept_new_options=False
     )
-    change_needed = st.selectbox(
+    change_needed = middle.selectbox(
         "Change Required:",
         options=["Enable", "Disable"],
         accept_new_options=False,
         index=1
     )
-
-    left, middle, right = st.columns(3, vertical_alignment="center")
     launch_1 = middle.button("£1", use_container_width=True)
     launch_2 = middle.button("£2", use_container_width=True)
     launch_5 = middle.button("£5", use_container_width=True)

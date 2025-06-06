@@ -19,15 +19,12 @@ if "difficulty_chosen" not in st.session_state:
 if not st.session_state.difficulty_chosen:
     st.title("Paying Straight Ups")
 
-
     left, middle, right = st.columns(3, vertical_alignment="center")
-    
     difficulty = middle.selectbox(
         "Select Difficulty",
         options=["Easy", "Medium", "Hard"],
         accept_new_options=False
     )
-    min_neighbour_bet = middle.slider("Minimum Neighbour Bets", 1,5, 1)
     max_neighbour_bet = middle.slider("Maximum Neighbour Bets", 1,5,1)
     neighbour_bets = middle.button("Continue", use_container_width=True)
     return_to_menu = middle.button("Return to Roulette Menu", use_container_width=True)
@@ -35,7 +32,6 @@ if not st.session_state.difficulty_chosen:
     if neighbour_bets:
         st.session_state.difficulty = difficulty
         st.session_state.difficulty_chosen = True
-        st.session_state.min_neighbour_bets = min_neighbour_bet
         st.session_state.max_neighbour_bets = max_neighbour_bet
         st.rerun()
 
@@ -66,7 +62,7 @@ else:
 
     def generate_question():
         amount = random.choice(question_pool)
-        quantity_of_bets = random.choice(range(st.session_state.min_neighbour_bets, (st.session_state.max_neighbour_bets + 1)))
+        quantity_of_bets = random.choice(range(1, (st.session_state.max_neighbour_bets + 1)))
 
         #Returns a tuple in the following format - Question text, amount to multiply, answer
         return f"{quantity_of_bets} neighbout bets by {amount}", ((amount * 5) * quantity_of_bets)
