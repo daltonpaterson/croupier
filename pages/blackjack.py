@@ -18,13 +18,14 @@ if "difficulty_chosen" not in st.session_state:
 
 if not st.session_state.difficulty_chosen:
     st.title("Blackjack Payouts - 3 to 2")
-    difficulty = st.selectbox(
+    left, middle, right = st.columns(3, vertical_alignment="center")
+
+    difficulty = middle.selectbox(
         "Select Difficulty:",
         options=["Easy", "Medium", "Hard", "Kyle"],
         accept_new_options=False
     )
 
-    left, middle, right = st.columns(3, vertical_alignment="center")
     blackjack = middle.button("Continue", use_container_width=True)
     blackjack_menu = middle.button("Return to Blackjack Menu", use_container_width=True)
 

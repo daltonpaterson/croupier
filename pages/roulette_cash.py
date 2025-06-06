@@ -18,13 +18,13 @@ if "difficulty_chosen" not in st.session_state:
 
 if not st.session_state.difficulty_chosen:
     st.title("Cash Conversions")
-    difficulty = st.selectbox(
+
+    left, middle, right = st.columns(3, vertical_alignment="center")
+    difficulty = middle.selectbox(
         "Select Difficulty:",
         options=["Easy", "Medium", "Hard"],
         accept_new_options=False
     )
-
-    left, middle, right = st.columns(3, vertical_alignment="center")
     launch_2 = middle.button("£2", use_container_width=True)
     launch_5 = middle.button("£5", use_container_width=True)
     launch_25 = middle.button("£25", use_container_width=True)
