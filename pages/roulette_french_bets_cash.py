@@ -19,7 +19,7 @@ if not st.session_state.difficulty_chosen:
     st.title("French Bets")
     left, middle, right = st.columns(3, vertical_alignment="center")
     
-    max_cash = middle.text_input("Maximium Cash:")
+    max_cash = middle.number_input("Maximium Cash:", min_value= 50,placeholder="Enter cash amount", format="%d", step=25)
     launch_tier = middle.button("Tier", use_container_width=True)
     launch_orphelins = middle.button("Orphelins", use_container_width=True)
     launch_voisin = middle.button("Voisin", use_container_width=True)
@@ -27,10 +27,12 @@ if not st.session_state.difficulty_chosen:
     return_to_menu = middle.button("Return to Roulette Menu", use_container_width=True)
 
     if launch_tier:
-        st.session_state.difficulty = int(max_cash)
-        st.session_state.difficulty_chosen = True
-        st.session_state.conversion_multiplier = 6
-        st.rerun()
+            st.session_state.difficulty = int(max_cash)
+            st.session_state.difficulty_chosen = True
+            st.session_state.conversion_multiplier = 6
+            st.rerun()
+            st.error("Please enter a valid number.")
+
 
     if launch_orphelins:
         st.session_state.difficulty = int(max_cash)
@@ -150,8 +152,7 @@ else:
         submitted = st.form_submit_button("Check", type = "primary")
         if submitted:
             try:
-
-
+                
                 if user_input_cash == "" or user_input_cash == " ":
                     change = int(0)
                 else:
@@ -173,6 +174,7 @@ else:
     if st.session_state.show_result:
         if st.session_state.correct:
             st.success("✅ Correct! - Press enter to receive a new question")
+            st.session_state.show_answer = True
         elif st.session_state.show_answer:
             st.info(f"💡 The correct answer is goes by {st.session_state.correct_answer[0]} with £{st.session_state.correct_answer[1]} change")
         else:
