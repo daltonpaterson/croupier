@@ -17,7 +17,7 @@ if "difficulty_chosen" not in st.session_state:
     st.session_state.difficulty = None
 
 if not st.session_state.difficulty_chosen:
-    st.title("Paying Straight Ups")
+    st.title("Neighbour Bets")
 
     left, middle, right = st.columns(3, vertical_alignment="center")
     difficulty = middle.selectbox(
