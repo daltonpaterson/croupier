@@ -9,6 +9,9 @@ left, middle, right = st.columns(3, vertical_alignment="center")
 middle.divider()
 roulette = middle.button("Roulette", use_container_width=True)
 blackjack = middle.button("Blackjack", use_container_width=True)
+three_card_poker = middle.button("Three Card Poker", use_container_width=True, disabled=True)
+ultimate_texas_poker = middle.button("Ultimate Texas Hold'em", use_container_width=True, disabled=True)
+baccarat = middle.button("Baccarat", use_container_width=True, disabled=True)
 middle.divider()
 
 # -----
