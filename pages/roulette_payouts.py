@@ -17,7 +17,7 @@ if "difficulty_chosen" not in st.session_state:
     st.session_state.difficulty = None
 
 if not st.session_state.difficulty_chosen:
-    st.title("Roulette Payouts")
+    st.markdown("<h1 style='text-align: center;'>Roulette Payouts</h1>", unsafe_allow_html=True)
     left, middle, right = st.columns(3, vertical_alignment="center")
     difficulty = middle.selectbox(
         "Select Difficulty:",
@@ -122,7 +122,7 @@ else:
         st.session_state["100"] = " "
         st.session_state.reset_inputs = False  # Unset the flag
 
-    st.title(f"Payout Simulator at £{st.session_state.conversion_multiplier}")
+    st.markdown(f"<h1 style='text-align: center;'>Payout Simulator at £{st.session_state.conversion_multiplier}</h1>", unsafe_allow_html=True)
     st.subheader(f"{st.session_state.question_number} at {st.session_state.conversion_multiplier}")
 
     if st.session_state.change_enabled:

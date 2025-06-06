@@ -16,7 +16,7 @@ if "difficulty_chosen" not in st.session_state:
     st.session_state.difficulty = None
 
 if not st.session_state.difficulty_chosen:
-    st.title("French Bets")
+    st.markdown("<h1 style='text-align: center;'>French Bets</h1>", unsafe_allow_html=True)
     
     left, middle, right = st.columns(3, vertical_alignment="center")
     difficulty = middle.selectbox(
@@ -112,7 +112,7 @@ else:
         st.session_state.show_answer = False
         st.session_state.input_key = str(uuid.uuid4())
 
-    st.title(f"French Bets")
+    st.markdown("<h1 style='text-align: center;'>French Bets</h1>", unsafe_allow_html=True)
     st.subheader(f"{st.session_state.question_text}")
 
     with st.form("answer_form"):

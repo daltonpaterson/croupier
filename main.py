@@ -3,7 +3,7 @@ import streamlit as st
 # -----
 # Main Menu Layout
 # -----
-
+st.markdown("<h1 style='text-align: center;'>Croupier Training App</h1>", unsafe_allow_html=True)
 left, middle, right = st.columns(3, vertical_alignment="center")
 
 middle.divider()
