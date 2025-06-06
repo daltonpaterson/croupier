@@ -16,7 +16,7 @@ if "difficulty_chosen" not in st.session_state:
     st.session_state.difficulty = None
 
 if not st.session_state.difficulty_chosen:
-    st.title("French Bets")
+    st.markdown("<h1 style='text-align: center;'>French Bets - Cash</h1>", unsafe_allow_html=True)
     left, middle, right = st.columns(3, vertical_alignment="center")
     
     max_cash = middle.number_input("Maximium Cash:", min_value= 50,placeholder="Enter cash amount", format="%d", step=25)
@@ -143,7 +143,7 @@ else:
         st.session_state["user_input_change"] = " "
         st.session_state.reset_inputs = False  # Unset the flag
 
-    st.title(f"French Bets - Cash")
+    st.markdown("<h1 style='text-align: center;'>French Bets - Cash</h1>", unsafe_allow_html=True)
     st.subheader(f"{st.session_state.question_text}")
 
     with st.form("answer_form"):
