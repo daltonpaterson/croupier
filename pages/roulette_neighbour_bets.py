@@ -64,7 +64,7 @@ else:
         quantity_of_bets = random.choice(range(1, (st.session_state.max_neighbour_bets + 1)))
 
         #Returns a tuple in the following format - Question text, amount to multiply, answer
-        return f"{quantity_of_bets} neighbout bets by {amount}", ((amount * 5) * quantity_of_bets)
+        return f"{quantity_of_bets} neighbour bets by {amount}", ((amount * 5) * quantity_of_bets)
 
     # Initialize session state for game
     if "question_text" not in st.session_state:
