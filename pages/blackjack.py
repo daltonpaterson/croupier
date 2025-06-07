@@ -2,6 +2,10 @@ import streamlit as st
 import random
 import uuid
 
+st.set_page_config(
+    page_title="Paying Blackjack"
+)
+
 DIFFICULTY_RANGES = {
     "Easy": list(range(5, 105, 5)),     # 5 to 100
     "Medium": list(range(50, 205, 5)),   # 50 to 200

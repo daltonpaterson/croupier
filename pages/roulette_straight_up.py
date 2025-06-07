@@ -2,6 +2,10 @@ import streamlit as st
 import random
 import uuid
 
+st.set_page_config(
+    page_title="Roulette Straight Ups"
+)
+
 DIFFICULTY_RANGES = {
     "Easy": list(range(20, 55, 5)),     # 5 to 50
     "Medium": list(range(20, 105, 5)),   # 5 to 100
