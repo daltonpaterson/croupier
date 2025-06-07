@@ -2,7 +2,6 @@ import streamlit as st
 
 st.set_page_config(
     page_title="Croupier Training App",
-    page_icon=":material/poker_chip:",
     layout="centered",
 )
 
@@ -10,7 +9,6 @@ st.set_page_config(
 # Main Menu Layout
 # -----
 st.markdown("<h1 style='text-align: center;'>Croupier Training App</h1>", unsafe_allow_html=True)
-st.title(":material/poker_chip:")
 left, middle, right = st.columns(3, vertical_alignment="center")
 
 middle.divider()
