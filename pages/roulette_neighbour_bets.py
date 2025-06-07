@@ -2,6 +2,10 @@ import streamlit as st
 import random
 import uuid
 
+st.set_page_config(
+    page_title="Roulette Neighbour Bets"
+)
+
 DIFFICULTY_RANGES = {
     "Easy": list(range(5, 55, 5)),     # 5 to 50
     "Medium": list(range(50, 155, 5)),   # 50 to 150

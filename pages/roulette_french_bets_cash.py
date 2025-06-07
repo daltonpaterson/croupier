@@ -1,6 +1,9 @@
 import streamlit as st
 import random
-#import uuid
+
+st.set_page_config(
+    page_title="French Bets - Cash"
+)
 
 DIFFICULTY_RANGES = {
     "Easy": list(range(5, 55, 5)),     # 5 to 50

@@ -1,5 +1,8 @@
 import streamlit as st
 
+st.set_page_config(
+    page_title="Blackjack Menu"
+)
 
 st.markdown("<h1 style='text-align: center;'>Blackjack Menu</h1>", unsafe_allow_html=True)
 left, middle, right = st.columns(3, vertical_alignment="center")
