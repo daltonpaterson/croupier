@@ -55,7 +55,7 @@ else:
         st.session_state.correct = False
         st.session_state.show_result = False
         st.session_state.show_answer = False
-        st.session_state.input_key = str(uuid.uuid4())
+        st.session_state.input_key = int(uuid.uuid4())
         st.rerun()
     
     def reveal_question():
@@ -72,13 +72,13 @@ else:
         st.session_state.show_result = False
         st.session_state.correct = False
         st.session_state.show_answer = False
-        st.session_state.input_key = str(uuid.uuid4())
+        st.session_state.input_key = int(uuid.uuid4())
 
     st.markdown("<h1 style='text-align: center;'>🃏 Blackjack</h1>", unsafe_allow_html=True)
     st.subheader(f"Blackjack on {st.session_state.question_number}")
 
     with st.form("answer_form"):
-        user_input = st.text_input("What is the correct answer?", key=st.session_state.input_key)
+        user_input = st.number_input("What is the correct answer?", value=None ,placeholder="Enter blackjack",format="%.1f", step=5.0, key=st.session_state.input_key)
         submitted = st.form_submit_button("Check", type = "primary")
 
         if submitted:
@@ -95,8 +95,6 @@ else:
                 st.session_state.correct_answer = correct_value
             except ValueError:
                 st.error("Please enter a valid number.")
-
-
     
     if st.session_state.show_result:
         if st.session_state.correct:
@@ -124,7 +122,7 @@ else:
     st.components.v1.html(f"""
         <script>
             setTimeout(function() {{
-                const formInputs = window.parent.document.querySelectorAll('input[type="text"]');
+                const formInputs = window.parent.document.querySelectorAll('input[type="numbers"]');
                 if (formInputs.length > 0) {{
                     formInputs[formInputs.length - 1].focus();
                 }}
