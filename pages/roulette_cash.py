@@ -68,7 +68,7 @@ else:
         st.session_state.correct = False
         st.session_state.show_result = False
         st.session_state.show_answer = False
-        st.session_state.input_key = str(uuid.uuid4())
+        st.session_state.input_key = int(uuid.uuid4())
         st.rerun()
     
     def reveal_question():
@@ -85,14 +85,14 @@ else:
         st.session_state.show_result = False
         st.session_state.correct = False
         st.session_state.show_answer = False
-        st.session_state.input_key = str(uuid.uuid4())
+        st.session_state.input_key = int(uuid.uuid4())
 
     
     st.markdown(f"<h1 style='text-align: center;'>Cash Conversions at £{st.session_state.conversion_multiplier}</h1>", unsafe_allow_html=True)
     st.subheader(f"{st.session_state.question_number} at {st.session_state.conversion_multiplier}")
 
     with st.form("answer_form"):
-        user_input = st.text_input("What is the correct answer?", key=st.session_state.input_key)
+        user_input = st.number_input("What is the correct answer?", value=None ,placeholder="Enter cash amount", format="%d", step=5, key=st.session_state.input_key)
         submitted = st.form_submit_button("Check", type = "primary")
 
         if submitted:
@@ -134,7 +134,7 @@ else:
     st.components.v1.html(f"""
         <script>
             setTimeout(function() {{
-                const formInputs = window.parent.document.querySelectorAll('input[type="text"]');
+                const formInputs = window.parent.document.querySelectorAll('input[type="number"]');
                 if (formInputs.length > 0) {{
                     formInputs[formInputs.length - 1].focus();
                 }}

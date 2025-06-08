@@ -1,5 +1,6 @@
 import streamlit as st
 import random
+import uuid
 
 st.set_page_config(
     page_title="French Bets - Cash"
@@ -124,7 +125,7 @@ else:
                 st.warning("Multiplier too high for available cash. Adjusting to minimum valid value.")
                 return start
 
-            valid_cash_values = list(range(start, end, 25))
+            valid_cash_values = list(range(start, end, 5))
             return random.choice(valid_cash_values)
 
         except (ValueError, TypeError) as e:
@@ -140,28 +141,39 @@ else:
         st.session_state.show_result = False
         st.session_state.correct = False
         st.session_state.show_answer = False
+
+        st.session_state.amount_key = int(uuid.uuid4())
+        st.session_state.change_key = int(uuid.uuid4())
+        
     
     if st.session_state.get("reset_inputs"):
-        st.session_state["user_input_amount"] = " "
-        st.session_state["user_input_change"] = " "
+        st.session_state["user_input_amount"] = int(uuid.uuid4())
+        st.session_state["user_input_change"] = int(uuid.uuid4())
+        st.session_state.amount_key = int(uuid.uuid4())
+        st.session_state.change_key = int(uuid.uuid4())
         st.session_state.reset_inputs = False  # Unset the flag
 
     st.markdown("<h1 style='text-align: center;'>French Bets - Cash</h1>", unsafe_allow_html=True)
     st.subheader(f"{st.session_state.question_text}")
 
     with st.form("answer_form"):
-        user_input_amount = st.text_input("How much does it go by?", key="user_input_amount")
-        user_input_cash = st.text_input("How much change should be given?", key="user_input_change")
+        user_input_amount = st.number_input("How much does it go by?", placeholder= "Enter amount", value=None, format="%d", step=5, key=st.session_state.amount_key)
+        user_input_cash = st.number_input("How much change should be given?", placeholder= "Enter change", value=None, format="%d", step=5, key=st.session_state.change_key)
         submitted = st.form_submit_button("Check", type = "primary")
         if submitted:
             try:
                 
-                if user_input_cash == "" or user_input_cash == " ":
+                if user_input_amount == None:
+                    amount = 0
+                else:
+                    amount = int(user_input_amount)
+
+                if user_input_cash == None:
                     change = int(0)
                 else:
                     change = int(user_input_cash)
 
-                user_value = int(user_input_amount), change
+                user_value = amount, change
                 correct_value = st.session_state.correct_answer
                 is_correct = user_value == correct_value
 
@@ -171,7 +183,7 @@ else:
                 st.session_state.correct = is_correct
                 st.session_state.show_result = True
                 st.session_state.correct_answer = correct_value
-            except ValueError:
+            except ValueError or None:
                 st.error("Please enter a valid number.")
 
     if st.session_state.show_result:
@@ -181,7 +193,7 @@ else:
         elif st.session_state.show_answer:
             st.info(f"💡 The correct answer is goes by {st.session_state.correct_answer[0]} with £{st.session_state.correct_answer[1]} change")
         else:
-            st.error(f"❌ Incorrect. The correct answer was goes by {st.session_state.correct_answer[0]} with £{st.session_state.correct_answer[1]} change")
+            st.error(f"❌ Incorrect. Try again or click 'Show Answer'")
 
     #Create inline buttons
     new_question, show_answer, return_to_menu = st.columns(3)
