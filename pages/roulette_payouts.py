@@ -86,10 +86,10 @@ else:
             return random.randrange(25, (st.session_state.correct_answer) + 1, 25)
 
     def safe_int(value):
-        try:
-            return int(value)
-        except ValueError:
+        if value == None:
             return 0
+        else:
+            return int(value)
 
     def reset_question():
         current = st.session_state.question_number
@@ -116,14 +116,19 @@ else:
         st.session_state.show_result = False
         st.session_state.correct = False
         st.session_state.show_answer = False
-        st.session_state.input_key = str(uuid.uuid4())
+        st.session_state.input_key_1 = int(uuid.uuid4())
+        st.session_state.input_key_5 = int(uuid.uuid4())
+        st.session_state.input_key_25 = int(uuid.uuid4())
+        st.session_state.input_key_100 = int(uuid.uuid4())
+        st.session_state.input_key_1000 = int(uuid.uuid4())
 
 
     if st.session_state.get("reset_inputs"):
-        st.session_state["1"] = " "
-        st.session_state["5"] = " "
-        st.session_state["25"] = " "
-        st.session_state["100"] = " "
+        st.session_state.input_key_1 = int(uuid.uuid4())
+        st.session_state.input_key_5 = int(uuid.uuid4())
+        st.session_state.input_key_25 = int(uuid.uuid4())
+        st.session_state.input_key_100 = int(uuid.uuid4())
+        st.session_state.input_key_1000 = int(uuid.uuid4())
         st.session_state.reset_inputs = False  # Unset the flag
 
     st.markdown(f"<h1 style='text-align: center;'>Payout Simulator at £{st.session_state.conversion_multiplier}</h1>", unsafe_allow_html=True)
@@ -137,16 +142,16 @@ else:
 
         with first_col:
             grey_chip = st.image("assets/images/GreyChip.png")
-            one_entry = st.text_input("1 entry", label_visibility="collapsed", key="1")
+            one_entry = st.number_input("1", value=None, min_value=0, format="%d", step=5, key=st.session_state.input_key_1, label_visibility="collapsed")
         with seond_col:
             red_chip = st.image("assets/images/RedChip.png")
-            five_entry = st.text_input("5 entry", label_visibility="collapsed", key="5")
+            five_entry = st.number_input("1", value=None, min_value=0,format="%d", step=5, key=st.session_state.input_key_5, label_visibility="collapsed")
         with third_col:
             black_chip = st.image("assets/images/BlackChip.png")
-            twenty_five_entry = st.text_input("25 entry", label_visibility="collapsed", key="25")
+            twenty_five_entry = st.number_input("1", value=None, min_value=0,format="%d", step=5, key=st.session_state.input_key_25, label_visibility="collapsed")
         with fourth_col:
             pink_chip = st.image("assets/images/PinkChip.png")
-            one_hundred_entry = st.text_input("100 entry", label_visibility="collapsed", key="100")
+            one_hundred_entry = st.number_input("1", value=None, min_value=0,format="%d", step=5, key=st.session_state.input_key_100, label_visibility="collapsed")
 
         submitted = st.form_submit_button("Check", type = "primary")
 
