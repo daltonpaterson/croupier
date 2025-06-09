@@ -122,7 +122,7 @@ else:
     st.components.v1.html(f"""
         <script>
             setTimeout(function() {{
-                const formInputs = window.parent.document.querySelectorAll('input[type="numbers"]');
+                const formInputs = window.parent.document.querySelectorAll('input[type="number"]');
                 if (formInputs.length > 0) {{
                     formInputs[formInputs.length - 1].focus();
                 }}
