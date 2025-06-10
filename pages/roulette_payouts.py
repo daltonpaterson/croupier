@@ -40,33 +40,18 @@ if not st.session_state.difficulty_chosen:
     launch_25 = middle.button("£25", use_container_width=True)
     return_to_menu = middle.button("Return to Roulette Menu", use_container_width=True)
 
-    if launch_1:
-        st.session_state.difficulty = difficulty
-        st.session_state.difficulty_chosen = True
-        st.session_state.conversion_multiplier = 1
-        st.session_state.change_enabled = (change_needed == "Enable")
-        st.rerun()
+    if change_needed == "Enable":
+        st.session_state.change_enabled = True
+    else:
+        st.session_state.change_enabled = False
 
-    if launch_2:
-        st.session_state.difficulty = difficulty
-        st.session_state.difficulty_chosen = True
-        st.session_state.conversion_multiplier = 2
-        st.session_state.change_enabled = (change_needed == "Enable")
-        st.rerun()
+    for multiplier, button in [(1, launch_1), (2, launch_2), (5, launch_5), (25, launch_25)]:
+        if button:
+            st.session_state.difficulty = difficulty
+            st.session_state.difficulty_chosen = True
+            st.session_state.conversion_multiplier = multiplier
+            st.rerun()
 
-    if launch_5:
-        st.session_state.difficulty = difficulty
-        st.session_state.difficulty_chosen = True
-        st.session_state.conversion_multiplier = 5
-        st.session_state.change_enabled = (change_needed == "Enable")
-        st.rerun()
-
-    if launch_25:
-        st.session_state.difficulty = difficulty
-        st.session_state.difficulty_chosen = True
-        st.session_state.conversion_multiplier = 25
-        st.session_state.change_enabled = (change_needed == "Enable")
-        st.rerun()
 
     if return_to_menu:
         st.session_state.clear()
@@ -76,12 +61,29 @@ else:
     # Payout Logic
     # --------------------
 
+    ALLOWED_CHIPS = {
+    1: [1, 5, 25, 100],
+    2: [1, 5, 25, 100],
+    5: [5, 25, 100],
+    25: [25, 100, 1000],
+    }
+
+    CHIP_IMAGES = {
+    1: "assets/images/GreyChip.png",
+    5: "assets/images/RedChip.png",
+    25: "assets/images/BlackChip.png",
+    100: "assets/images/PinkChip.png",
+    1000: "assets/images/BlueChip.png",
+    }
+
     # Question Pool - Default range set to Easy
     question_pool = DIFFICULTY_RANGES.get(st.session_state.difficulty, DIFFICULTY_RANGES["Easy"])
     
     def change_required():
         if st.session_state.conversion_multiplier == 2:
             return random.randrange(10, (st.session_state.correct_answer) + 1, 10)
+        elif st.session_state.conversion_multiplier == 25:
+            return random.randrange(100, (st.session_state.correct_answer) + 1, 100)
         else:
             return random.randrange(25, (st.session_state.correct_answer) + 1, 25)
 
@@ -100,7 +102,6 @@ else:
         st.session_state.correct = False
         st.session_state.show_result = False
         st.session_state.show_answer = False
-        st.session_state.input_key = str(uuid.uuid4())
         st.session_state.reset_inputs = True
         st.rerun()
     
@@ -116,20 +117,18 @@ else:
         st.session_state.show_result = False
         st.session_state.correct = False
         st.session_state.show_answer = False
-        st.session_state.input_key_1 = int(uuid.uuid4())
-        st.session_state.input_key_5 = int(uuid.uuid4())
-        st.session_state.input_key_25 = int(uuid.uuid4())
-        st.session_state.input_key_100 = int(uuid.uuid4())
-        st.session_state.input_key_1000 = int(uuid.uuid4())
+        st.session_state.trigger_autofocus = True
 
+        for chip in [1, 5, 25, 100, 1000]:
+            key_name = f"chip_key_{chip}"
+        if key_name not in st.session_state:
+            st.session_state[key_name] = f"chip_{chip}_{uuid.uuid4()}"
 
     if st.session_state.get("reset_inputs"):
-        st.session_state.input_key_1 = int(uuid.uuid4())
-        st.session_state.input_key_5 = int(uuid.uuid4())
-        st.session_state.input_key_25 = int(uuid.uuid4())
-        st.session_state.input_key_100 = int(uuid.uuid4())
-        st.session_state.input_key_1000 = int(uuid.uuid4())
-        st.session_state.reset_inputs = False  # Unset the flag
+        for chip in [1, 5, 25, 100, 1000]:
+            st.session_state[f"chip_key_{chip}"] = f"chip_{chip}_{uuid.uuid4()}"
+        st.session_state.reset_inputs = False
+        st.session_state.trigger_autofocus = True
 
     st.markdown(f"<h1 style='text-align: center;'>Payout Simulator at £{st.session_state.conversion_multiplier}</h1>", unsafe_allow_html=True)
     st.subheader(f"{st.session_state.question_number} at {st.session_state.conversion_multiplier}")
@@ -138,50 +137,52 @@ else:
         st.write(f"Give exactly £{st.session_state.required_cash_change} in cash.")
 
     with st.form("answer_form"):
-        first_col, seond_col, third_col, fourth_col = st.columns(4, vertical_alignment="center")
 
-        with first_col:
-            grey_chip = st.image("assets/images/GreyChip.png")
-            one_entry = st.number_input("1", value=None, min_value=0, format="%d", step=5, key=st.session_state.input_key_1, label_visibility="collapsed")
-        with seond_col:
-            red_chip = st.image("assets/images/RedChip.png")
-            five_entry = st.number_input("1", value=None, min_value=0,format="%d", step=5, key=st.session_state.input_key_5, label_visibility="collapsed")
-        with third_col:
-            black_chip = st.image("assets/images/BlackChip.png")
-            twenty_five_entry = st.number_input("1", value=None, min_value=0,format="%d", step=5, key=st.session_state.input_key_25, label_visibility="collapsed")
-        with fourth_col:
-            pink_chip = st.image("assets/images/PinkChip.png")
-            one_hundred_entry = st.number_input("1", value=None, min_value=0,format="%d", step=5, key=st.session_state.input_key_100, label_visibility="collapsed")
+
+        allowed = ALLOWED_CHIPS.get(st.session_state.conversion_multiplier, [])
+        chip_entries = {}
+        
+        cols = st.columns(len(allowed), vertical_alignment="center")
+
+        for col, chip_value in zip(cols, allowed):
+            with col:
+                st.image(CHIP_IMAGES[chip_value])
+                chip_key = st.session_state.get(f"chip_key_{chip_value}")
+                chip_entries[chip_value] = st.number_input(
+                    f"{chip_value} entry", 
+                    label_visibility="collapsed", 
+                    value=None, min_value=0, 
+                    format="%d", 
+                    step=5, 
+                    key=chip_key,
+                )
 
         submitted = st.form_submit_button("Check", type = "primary")
 
         if submitted:
             if st.session_state.correct:
                 reset_question()
-            ones = safe_int(one_entry)
-            fives = safe_int(five_entry)
-            twenty_fives = safe_int(twenty_five_entry)
-            one_hundreds = safe_int(one_hundred_entry)
 
-            ones_total = ones * (2 if st.session_state.conversion_multiplier == 2 else 1)
+            used_chips = {chip: safe_int(chip_entries.get(chip, 0)) for chip in allowed}
             cash_chip_total = 0
-            non_cash_total = ones_total
+            non_cash_total = 0
 
-            if st.session_state.conversion_multiplier == 5:
-                non_cash_total += fives * 5
-            else:
-                cash_chip_total += fives * 5
+            for chip, count in used_chips.items():
+                chip_value = chip
 
-            if st.session_state.conversion_multiplier == 25:
-                non_cash_total += twenty_fives * 25
-            else:
-                cash_chip_total += twenty_fives * 25
+                # Special handling: if conversion is 2, 1-chip is worth 2
+                if st.session_state.conversion_multiplier == 2 and chip == 1:
+                    chip_value = 2
 
-            cash_chip_total += one_hundreds * 100
+                if chip == st.session_state.conversion_multiplier:
+                    non_cash_total += chip_value * count
+                else:
+                    cash_chip_total += chip_value * count
+
             total_input = cash_chip_total + non_cash_total
-
             st.session_state.show_result = True
             st.session_state.correct = False
+
 
             if st.session_state.change_enabled:
                 if total_input != st.session_state.correct_answer:
@@ -213,3 +214,28 @@ else:
     if return_to_menu.button("Return to Menu", use_container_width= True):
         st.session_state.clear()
         st.switch_page("pages/roulette_payouts.py")
+
+    #Removes enter to submit label text
+    st.markdown(
+        """
+        <style>
+        div[data-testid="InputInstructions"] > span:nth-child(1) {
+        visibility: hidden;
+        }
+        </style>
+        """,
+            unsafe_allow_html=True
+    )
+    #Autofocus first input box
+    if st.session_state.trigger_autofocus:
+        st.components.v1.html(f"""
+            <script>
+                setTimeout(function() {{
+                    const formInputs = window.parent.document.querySelectorAll('input[type="number"]');
+                    if (formInputs.length > 0) {{
+                        formInputs[0].focus();
+                    }}
+                }}, 150);  // longer delay to ensure DOM is ready
+            </script>
+        """, height=0)
+        st.session_state.trigger_autofocus = False
