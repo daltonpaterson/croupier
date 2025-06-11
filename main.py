@@ -17,6 +17,7 @@ blackjack = middle.button("Blackjack", use_container_width=True)
 three_card_poker = middle.button("Three Card Poker", use_container_width=True)
 ultimate_texas_poker = middle.button("Ultimate Texas Hold'em", use_container_width=True, disabled=True)
 baccarat = middle.button("Baccarat", use_container_width=True, disabled=True)
+houseedge = middle.button("House Edges", use_container_width=True)
 middle.divider()
 
 # -----
@@ -29,3 +30,5 @@ if blackjack:
     st.switch_page("pages/blackjack_menu.py")
 if three_card_poker:
     st.switch_page("pages/threecard_sidebets.py")
+if houseedge:
+    st.switch_page("pages/houseedge.py")
