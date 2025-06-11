@@ -83,7 +83,6 @@ else:
         if st.session_state.six_decks == True:
             questions = [
                 ("[Six Deck] Blackjack (Best technique)", 0.55),
-                ("[Six Deck] Blackjack (Best technique & draws soft 17)", 0.89),
                 ("Ace King Suited", 19.17),
                 ("[Six Deck] Bonus Pairs", 3.16),
                 ("[Six Deck] 21+3", 3.23),
@@ -91,7 +90,6 @@ else:
         else:
             questions =[
                 ("[Four Deck] Blackjack (Best technique)", 0.51),
-                ("[Four Deck] Blackjack (Best technique & draws soft 17)", 0.85),
                 ("Ace King Suited", 19.17),
                 ("[Four Deck] Bonus Pairs", 4.3),
                 ("[Four Deck] 21+3", 4.24),
