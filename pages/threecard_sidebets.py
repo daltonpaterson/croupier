@@ -29,13 +29,13 @@ if not st.session_state.difficulty_chosen:
         accept_new_options=False
     )
     colour_bonus = middle.selectbox(
-        "Matching Colour Bonus:",
+        "Prime Bonus:",
         options=["Enable", "Disable"],
         accept_new_options=False,
         index=1
     )
+    launch_pair_plus = middle.button("Pair Plus", use_container_width=True)
     launch_prime = middle.button("Prime", use_container_width=True)
-    launch_colour = middle.button("Colour Bonus", use_container_width=True)
     launch_mixed = middle.button("Mixed", use_container_width=True)
     return_to_menu = middle.button("Return to Main Menu", use_container_width=True)
 
@@ -44,16 +44,16 @@ if not st.session_state.difficulty_chosen:
     else:
         st.session_state.colour_bonus = False
 
+    if launch_pair_plus:
+        st.session_state.difficulty = difficulty
+        st.session_state.difficulty_chosen = True
+        st.session_state.mode = "Pair Plus"
+        st.rerun()
+
     if launch_prime:
         st.session_state.difficulty = difficulty
         st.session_state.difficulty_chosen = True
         st.session_state.mode = "Prime"
-        st.rerun()
-
-    if launch_colour:
-        st.session_state.difficulty = difficulty
-        st.session_state.difficulty_chosen = True
-        st.session_state.mode = "Colour"
         st.rerun()
 
     if launch_mixed:
@@ -84,9 +84,9 @@ else:
         st.session_state.show_answer = True
         st.session_state.show_result = True
 
-    def generate_prime_question():
+    def generate_pair_plus_question():
 
-        bets = [("Pair", 1), ("Flush", 4), ("Straight", 6), ("Three of a Kind", 33), ("Straight Flush", 35)]
+        bets = [("Flush", 4), ("Straight", 6), ("Three of a Kind", 33), ("Straight Flush", 35)]
 
         question = random.choice(bets)
         amount = random.choice(question_pool)
@@ -94,21 +94,21 @@ else:
         return f"{question[0]} at {amount}", amount, amount * question[1]
         
     
-    def generate_colour_question():
+    def generate_prime_question():
         amount = random.choice(question_pool)
         if st.session_state.colour_bonus == True:
-            return f"Colour Bonus at {amount} (Matching Colour)", amount, amount * 4
+            return f"Prime at {amount} (Prime Bonus)", amount, amount * 4
         else:
-            return f"Colour Bonus at {amount}", amount, amount * 3
+            return f"Prime at {amount}", amount, amount * 3
 
     def generate_question():
         mode = st.session_state.mode
+        if mode == "Pair Plus":
+            return generate_pair_plus_question()
         if mode == "Prime":
             return generate_prime_question()
-        if mode == "Colour":
-            return generate_colour_question()
         else:
-            mixed_question = random.choice([generate_prime_question, generate_colour_question])
+            mixed_question = random.choice([generate_pair_plus_question, generate_prime_question])
             return mixed_question()
 
 
