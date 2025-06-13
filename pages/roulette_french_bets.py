@@ -32,34 +32,20 @@ if not st.session_state.difficulty_chosen:
     launch_orphelins = middle.button("Orphelins", use_container_width=True)
     launch_voisin = middle.button("Voisin", use_container_width=True)
     launch_mixed = middle.button("Mixed", use_container_width=True)
+    launch_random = middle.button("Random", use_container_width=True)
     return_to_menu = middle.button("Return to Roulette Menu", use_container_width=True)
 
-    if launch_tier:
-        st.session_state.difficulty = difficulty
-        st.session_state.difficulty_chosen = True
-        st.session_state.conversion_multiplier = 6
-        st.session_state.mixed = False
-        st.rerun()
-
-    if launch_orphelins:
-        st.session_state.difficulty = difficulty
-        st.session_state.difficulty_chosen = True
-        st.session_state.conversion_multiplier = 5
-        st.session_state.mixed = False
-        st.rerun()
-
-    if launch_voisin:
-        st.session_state.difficulty = difficulty
-        st.session_state.difficulty_chosen = True
-        st.session_state.conversion_multiplier = 9
-        st.session_state.mixed = False
-        st.rerun()
-
-    if launch_mixed:
-        st.session_state.difficulty = difficulty
-        st.session_state.difficulty_chosen = True
-        st.session_state.mixed = True
-        st.rerun()
+    for mode, button in [
+        ("Tier", launch_tier), 
+        ("Orphelins", launch_orphelins),
+        ("Voisin", launch_voisin),
+        ("Mixed", launch_mixed),
+        ("Random", launch_random)]:
+        if button:
+            st.session_state.difficulty = difficulty
+            st.session_state.difficulty_chosen = True
+            st.session_state.mode = mode
+            st.rerun()
 
     if return_to_menu:
         st.session_state.clear()
@@ -83,27 +69,41 @@ else:
         st.session_state.show_answer = True
         st.session_state.show_result = True
 
+    def generate_mixed_question():
+        bets = [("Tier", 6), ("Orphelins", 5), ("Voisin", 9)]
+        bet1, bet2 = random.sample(bets, 2)
+        combined_pieces = bet1[1] + bet2[1]
+        amount = random.choice(question_pool)
+
+        return f"{bet1[0]} and {bet2[0]} by {amount}", amount, combined_pieces * amount
+
+    def generate_french_question():
+        mode = st.session_state.mode
+
+        if mode == "Random":
+            mode = random.choice(["Tier", "Orphelins", "Voisin"])
+
+        if mode == "Tier":
+            multiplier = 6
+        elif mode == "Orphelins":
+            multiplier = 5
+        elif mode == "Voisin":
+            multiplier = 9
+            
+        amount = random.choice(question_pool)
+        
+        #Returns a tuple in the following format - Question text, amount to multiply, answer
+        return f"{mode} by {amount}", {amount}, multiplier * amount
+    
     def generate_question():
-        if st.session_state.mixed == True:
-            bets = [("Tier", 6), ("Orphelins", 5), ("Voisin", 9)]
-            bet1, bet2 = random.sample(bets, 2)
-            combined_pieces = bet1[1] + bet2[1]
-            amount = random.choice(question_pool)
-
-            
-            return f"{bet1[0]} and {bet2[0]} by {amount}", amount, combined_pieces * amount
+        mode = st.session_state.mode
+        if mode == "Mixed":
+            return generate_mixed_question()
+        elif mode == "Random":
+            mixed_question = random.choice([generate_french_question, generate_mixed_question])
+            return mixed_question()
         else:
-            if st.session_state.conversion_multiplier == 6:
-                french_bet = "Tier"
-            elif st.session_state.conversion_multiplier == 5:
-                french_bet = "Orphelins"
-            elif st.session_state.conversion_multiplier == 9:
-                french_bet = "Voisin"
-
-            amount = random.choice(question_pool)
-            
-            #Returns a tuple in the following format - Question text, amount to multiply, answer
-            return f"{french_bet} by {amount}", {amount}, st.session_state.conversion_multiplier * amount
+            return generate_french_question()
 
     # Initialize session state for game
     if "question_number" not in st.session_state:
