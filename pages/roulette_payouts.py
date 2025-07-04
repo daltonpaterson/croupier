@@ -63,13 +63,14 @@ else:
 
     ALLOWED_CHIPS = {
     1: [1, 5, 25, 100],
-    2: [1, 5, 25, 100],
+    2: [2, 5, 25, 100],
     5: [5, 25, 100],
     25: [25, 100, 1000],
     }
 
     CHIP_IMAGES = {
     1: "assets/images/GreyChip.png",
+    2: "assets/images/GreyChip2.png",
     5: "assets/images/RedChip.png",
     25: "assets/images/BlackChip.png",
     100: "assets/images/PinkChip.png",
@@ -119,13 +120,13 @@ else:
         st.session_state.show_answer = False
         st.session_state.trigger_autofocus = True
 
-        for chip in [1, 5, 25, 100, 1000]:
+        for chip in [1, 2, 5, 25, 100, 1000]:
             key_name = f"chip_key_{chip}"
         if key_name not in st.session_state:
             st.session_state[key_name] = f"chip_{chip}_{uuid.uuid4()}"
 
     if st.session_state.get("reset_inputs"):
-        for chip in [1, 5, 25, 100, 1000]:
+        for chip in [1, 2, 5, 25, 100, 1000]:
             st.session_state[f"chip_key_{chip}"] = f"chip_{chip}_{uuid.uuid4()}"
         st.session_state.reset_inputs = False
         st.session_state.trigger_autofocus = True
@@ -151,9 +152,9 @@ else:
                 chip_entries[chip_value] = st.number_input(
                     f"{chip_value} entry", 
                     label_visibility="collapsed", 
-                    value=None, min_value=0, 
+                    value=0, min_value=0, 
                     format="%d", 
-                    step=5, 
+                    step=1, 
                     key=chip_key,
                 )
 
@@ -169,12 +170,7 @@ else:
 
             for chip, count in used_chips.items():
                 chip_value = chip
-
-                # Special handling: if conversion is 2, 1-chip is worth 2
-                if st.session_state.conversion_multiplier == 2 and chip == 1:
-                    chip_value = 2
-
-                if chip == st.session_state.conversion_multiplier:
+                if chip_value == st.session_state.conversion_multiplier:
                     non_cash_total += chip_value * count
                 else:
                     cash_chip_total += chip_value * count
