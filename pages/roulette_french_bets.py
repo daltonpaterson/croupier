@@ -1,6 +1,8 @@
 import streamlit as st
 import random
 import uuid
+from pages.tts import tts_question, tts_queue, tts_thread
+
 
 st.set_page_config(
     page_title="Roulette French Bets"
@@ -59,6 +61,7 @@ else:
         st.session_state.question_text = question[0]
         st.session_state.question_number = question[1]
         st.session_state.correct_answer = question[2]
+        tts_question(question[0])
         st.session_state.correct = False
         st.session_state.show_result = False
         st.session_state.show_answer = False
@@ -109,6 +112,7 @@ else:
     if "question_number" not in st.session_state:
         question = generate_question()
         st.session_state.question_text = question[0]
+        tts_question(question[0])
         st.session_state.question_number = question[1]
         st.session_state.correct_answer = question[2]
         st.session_state.show_result = False
@@ -140,10 +144,13 @@ else:
     if st.session_state.show_result:
         if st.session_state.correct:
             st.success("✅ Correct! - Press enter to recieve a new question")
+            tts_question("Correct")
         elif st.session_state.show_answer:
             st.info(f"💡 The correct answer is {st.session_state.correct_answer}")
+
         else:
             st.error(f"❌ Incorrect. The correct answer was {st.session_state.correct_answer}")
+            tts_question("Incorrect)")
 
     #Create inline buttons
     new_question, show_answer, return_to_menu = st.columns(3)
