@@ -23,7 +23,7 @@ if not st.session_state.mode_selected:
     launch_11 = middle.button("11", use_container_width=True)
     launch_17 = middle.button("17", use_container_width=True)
     launch_35 = middle.button("35", use_container_width=True)
-    return_to_menu = middle.button("Return to Roulette Menu", use_container_width=True)
+    return_to_menu = middle.button("Return to Main Menu", use_container_width=True)
 
     for mode, button in [
         (5, launch_5),
@@ -107,12 +107,11 @@ else:
         st.progress(idx / total_q)
         st.caption(f"Question {idx + 1} of {total_q}")
 
-        #Create inline buttons - extremely bootleg fix for style
-        return_to_menu, invisible_button, invisible_button2 = st.columns(3)
+        left, middle, right = st.columns(3)
 
-        if return_to_menu.button("Return to Menu", use_container_width=True):
+        if left.button("Return to Menu", use_container_width=True):
             st.session_state.clear()
-            st.switch_page("main.py")
+            st.switch_page("pages/multiplication_tables.py")
 
         # If user just answered, show feedback first
         if st.session_state.selected is not None:
@@ -173,4 +172,4 @@ else:
 
         if c2.button("Return to Menu", use_container_width=True):
             st.session_state.clear()
-            st.switch_page("main.py")
+            st.switch_page("pages/multiplication_tables.py")
